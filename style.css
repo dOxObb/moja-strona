@@ -11,18 +11,22 @@
     --transition: all 0.3s ease;
 }
 
-/* Reset CSS */
+/* Reset CSS i ustawienia układu */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* FIX: Ustawienie body jako flexbox, by stopka była na dole */
 body {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-dark);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Zajmuje minimum 100% wysokości okna */
 }
 
 /* Kontener ułatwiający centrowanie */
@@ -97,6 +101,13 @@ body {
     color: var(--primary-color);
 }
 
+/* FORMULARZ DODAWANIA */
+.add-form-container {
+    background: white;
+    padding: 20px 0;
+    border-bottom: 1px solid #ccc;
+}
+
 /* HERO (WYSZUKIWARKA) */
 .hero {
     background-color: var(--bg-color);
@@ -159,7 +170,7 @@ body {
 .cat-item {
     background: var(--white);
     padding: 15px 25px;
-    border-radius: 50px; /* tabletki */
+    border-radius: 50px;
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
@@ -178,6 +189,8 @@ body {
 /* LISTA OGŁOSZEŃ (GRID) */
 .listings {
     padding: 40px 0;
+    /* FIX: Wypycha stopkę w dół, jeśli jest mało treści */
+    flex: 1; 
 }
 
 .listings h2 {
@@ -219,19 +232,6 @@ body {
     object-fit: cover;
 }
 
-.badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: var(--accent-color);
-    color: var(--primary-color);
-    padding: 4px 8px;
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 2px;
-    text-transform: uppercase;
-}
-
 .card-content {
     padding: 15px;
 }
@@ -260,42 +260,25 @@ body {
     padding-top: 10px;
 }
 
-/* Paginacja */
-.pagination {
-    text-align: center;
-    margin-top: 40px;
-}
-
-.btn-secondary {
-    background: transparent;
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-    padding: 10px 30px;
-}
-
-.btn-secondary:hover {
-    background: var(--primary-color);
-    color: var(--white);
-}
-
-/* STOPKA  */
+/* STOPKA */
 .footer {
     background-color: var(--primary-color);
     color: var(--white);
     text-align: center;
     padding: 20px 0;
-    margin-top: 40px;
     font-size: 14px;
+    /* Dzięki flex:1 w .listings, stopka zawsze trafi tutaj */
+    margin-top: auto; 
 }
 
-/* Responsywność dla telefonów */
+/* Responsywność */
 @media (max-width: 768px) {
     .search-bar {
         flex-direction: column;
     }
     
     .nav-links span {
-        display: none; /* Ukryj tekst w menu na małych ekranach, zostaw ikony */
+        display: none;
     }
     
     .hero h1 {

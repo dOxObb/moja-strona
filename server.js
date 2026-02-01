@@ -12,9 +12,8 @@ const db = new sqlite3.Database('./database.db', (err) => {
     console.log('Połączono z bazą danych SQLite.');
 });
 
-// Używamy db.serialize, aby zapytania wykonywały się po kolei
+// Inicjalizacja bazy i danych startowych
 db.serialize(() => {
-    // A. Tworzenie tabeli
     db.run(`CREATE TABLE IF NOT EXISTS items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
@@ -24,40 +23,24 @@ db.serialize(() => {
         date TEXT
     )`);
 
-    // B. Sprawdzenie czy baza jest pusta i dodanie danych startowych
     db.get("SELECT count(*) as count FROM items", [], (err, row) => {
-        if (err) {
-            console.error(err.message);
-            return;
-        }
-
-        // Jeśli tabela jest pusta (count == 0), dodajemy ogłoszenia z HTML
-        if (row.count === 0) {
+        if (!err && row.count === 0) {
             console.log("Baza pusta. Dodaję przykładowe ogłoszenia...");
-            
             const insert = db.prepare("INSERT INTO items (title, price, location, image_url, date) VALUES (?,?,?,?,?)");
-
             insert.run("iPhone 13 Pro stan idealny", "3 200", "Warszawa", "https://placehold.co/600x400/png?text=iPhone+13", "Dzisiaj");
             insert.run("Rower górski Kross Hexagon", "950", "Kraków", "https://placehold.co/600x400/png?text=Rower", "Wczoraj");
             insert.run("Sofa rozkładana szara, wygodna", "Oddam za darmo", "Gdańsk", "https://placehold.co/600x400/png?text=Sofa", "2 dni temu");
             insert.run("Audi A4 B8 2.0 TDI", "28 900", "Poznań", "https://placehold.co/600x400/png?text=Auto", "Dzisiaj");
-
             insert.finalize();
-            console.log("Dane startowe zostały dodane!");
         }
     });
 });
 
-// 2. Middleware
 app.use(bodyParser.json());
-app.use(express.static(__dirname));
 
-// 3. Routing
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+// --- WAŻNE: API MUSI BYĆ PRZED PLIKAMI STATYCZNYMI ---
 
-// API - Pobierz ogłoszenia
+// API: Pobierz ogłoszenia
 app.get('/api/items', (req, res) => {
     const searchQuery = req.query.q;
     let sql = "SELECT * FROM items ORDER BY id DESC";
@@ -77,7 +60,7 @@ app.get('/api/items', (req, res) => {
     });
 });
 
-// API - Dodaj ogłoszenie
+// API: Dodaj ogłoszenie
 app.post('/api/items', (req, res) => {
     const { title, price, location, image_url } = req.body;
     const date = new Date().toLocaleDateString('pl-PL');
@@ -92,6 +75,15 @@ app.post('/api/items', (req, res) => {
         }
         res.json({ "message": "success", "id": this.lastID });
     });
+});
+
+// --- DOPIERO TERAZ PLIKI STATYCZNE ---
+// Serwowanie plików (HTML, CSS, JS) z głównego folderu
+app.use(express.static(__dirname));
+
+// Obsługa strony głównej (dla pewności)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Start serwera

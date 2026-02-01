@@ -11,6 +11,19 @@
     --transition: all 0.3s ease;
 }
 
+/* --- DEFINICJA ANIMACJI --- */
+/* Musi być na zewnątrz innych bloków */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px); /* Startuje 30px niżej */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);    /* Wraca na miejsce */
+    }
+}
+
 /* Reset CSS */
 * {
     margin: 0;
@@ -18,7 +31,7 @@
     box-sizing: border-box;
 }
 
-/* WAŻNE: Ustawienie wysokości dla html i body */
+/* Ustawienia wysokości dla html i body (Sticky Footer) */
 html {
     height: 100%;
 }
@@ -28,19 +41,17 @@ body {
     background-color: var(--bg-color);
     color: var(--text-dark);
     line-height: 1.6;
-    
-    /* Flexbox do układu strony */
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Musi zajmować całe okno */
+    min-height: 100vh;
 }
 
-/* Kontener ułatwiający centrowanie */
+/* Kontener */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-    width: 100%; /* Zabezpieczenie szerokości */
+    width: 100%;
 }
 
 /* NAWIGACJA */
@@ -196,7 +207,6 @@ body {
 /* LISTA OGŁOSZEŃ */
 .listings {
     padding: 40px 0;
-    /* WAŻNE: Rozciągnij tę sekcję, aby wypełniła pustą przestrzeń */
     flex: 1;
     width: 100%;
 }
@@ -212,7 +222,7 @@ body {
     gap: 20px;
 }
 
-/* Karta Ogłoszenia */
+/* --- KARTA OGŁOSZENIA Z ANIMACJĄ --- */
 .card {
     background: var(--white);
     border-radius: var(--border-radius);
@@ -220,7 +230,20 @@ body {
     box-shadow: var(--shadow);
     transition: var(--transition);
     cursor: pointer;
+    
+    /* Tutaj włączamy animację */
+    opacity: 0; /* Ukryj na start */
+    animation: fadeInUp 0.6s ease-out forwards; /* Uruchom animację */
 }
+
+/* Trik: Opóźnienie dla kolejnych elementów (kaskada) */
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+.card:nth-child(n+7) { animation-delay: 0.7s; } /* Dla reszty stałe opóźnienie */
 
 .card:hover {
     transform: translateY(-5px);
@@ -276,7 +299,6 @@ body {
     padding: 20px 0;
     font-size: 14px;
     width: 100%;
-    /* WAŻNE: To wymusza przesunięcie stopki na sam dół */
     margin-top: auto;
 }
 
@@ -291,32 +313,4 @@ body {
     .hero h1 {
         font-size: 1.8rem;
     }
-}
-
-/* --- ANIMACJE --- */
-
-/* Definicja ruchu: start nieco niżej i przezroczysty -> koniec na miejscu i widoczny */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Dodajemy animację do karty ogłoszenia */
-.card {
-    /* ... twoje istniejące style .card zostają ... */
-    
-    /* Dodaj to: */
-    animation: fadeInUp 0.5s ease-out forwards;
-    opacity: 0; /* Na start niewidoczne, żeby nie mignęło przed animacją */
-}
-
-/* Opcjonalne: Delikatny efekt po najechaniu na przycisk "Szukaj" */
-.btn-search:active {
-    transform: scale(0.98);
 }

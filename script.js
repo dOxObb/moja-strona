@@ -1,25 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
     const itemsContainer = document.querySelector('.grid-container');
     const addForm = document.getElementById('add-item-form');
-    
-    // Elementy wyszukiwarki
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
 
-    // Główna funkcja pobierająca dane
+    // Funkcja pobierająca ogłoszenia
     function fetchItems(query = '') {
         let url = '/api/items';
-        // Jeśli jest zapytanie, doklejamy je do URL
-        if (query) {
-            url += `?q=${encodeURIComponent(query)}`;
-        }
+        if (query) url += `?q=${encodeURIComponent(query)}`;
 
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                itemsContainer.innerHTML = ''; // Czyścimy listę
+                itemsContainer.innerHTML = ''; 
                 
-                if (result.data.length === 0) {
+                if (!result.data || result.data.length === 0) {
                     itemsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 20px;">Nie znaleziono ogłoszeń.</p>';
                     return;
                 }
@@ -35,9 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderItem(item) {
         const div = document.createElement('div');
         div.className = 'card';
+        // Zabezpieczenie przed brakiem zdjęcia
+        const imgUrl = item.image_url ? item.image_url : 'https://placehold.co/600x400?text=Brak+Zdjecia';
+        
         div.innerHTML = `
             <div class="card-image">
-                <img src="${item.image_url || 'https://placehold.co/600x400?text=Brak+Zdjecia'}" alt="${item.title}">
+                <img src="${imgUrl}" alt="${item.title}" onerror="this.src='https://placehold.co/600x400?text=Blad+Zdjecia'">
             </div>
             <div class="card-content">
                 <h4 class="card-title">${item.title}</h4>
@@ -51,58 +49,70 @@ document.addEventListener('DOMContentLoaded', () => {
         itemsContainer.appendChild(div);
     }
 
-    // --- OBSŁUGA WYSZUKIWANIA ---
-
-    // 1. Kliknięcie w przycisk
-    if (searchBtn) {
-        searchBtn.addEventListener('click', () => {
-            const query = searchInput.value.trim();
-            fetchItems(query);
-        });
-    }
-
-    // 2. Wciśnięcie ENTER w polu tekstowym
-    if (searchInput) {
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const query = searchInput.value.trim();
-                fetchItems(query);
-            }
-        });
-    }
-
-    // --- OBSŁUGA DODAWANIA (opcjonalna) ---
+    // --- OBSŁUGA FORMULARZA DODAWANIA ---
     if(addForm) {
         addForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Zatrzymaj przeładowanie strony
+
+            // Pobieranie wartości
+            const titleVal = document.getElementById('title').value;
+            const priceVal = document.getElementById('price').value;
+            const locationVal = document.getElementById('location').value;
+            const imageVal = document.getElementById('image_url').value;
+
             const newItem = {
-                title: document.getElementById('title').value,
-                price: document.getElementById('price').value,
-                location: document.getElementById('location').value,
-                image_url: document.getElementById('image_url').value 
+                title: titleVal,
+                price: priceVal,
+                location: locationVal,
+                image_url: imageVal
             };
+
+            console.log("Wysyłam dane:", newItem);
 
             fetch('/api/items', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newItem)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    // Jeśli serwer zwróci błąd (np. 400 lub 500)
+                    return response.json().then(err => { throw new Error(err.error || 'Błąd serwera') });
+                }
+                return response.json();
+            })
             .then(() => {
-                alert('Ogłoszenie dodane!');
-                addForm.reset();
-                fetchItems(); 
+                alert('Ogłoszenie dodane pomyślnie!');
+                addForm.reset(); // Wyczyść pola
+                fetchItems();    // Odśwież listę
+                // Ukryj formularz
                 document.querySelector('.add-form-container').style.display = 'none';
+            })
+            .catch(err => {
+                console.error("Błąd dodawania:", err);
+                alert('Nie udało się dodać ogłoszenia: ' + err.message);
             });
         });
     }
 
-    // Start: załaduj wszystko
+    // Obsługa wyszukiwarki
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => fetchItems(searchInput.value.trim()));
+    }
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') fetchItems(searchInput.value.trim());
+        });
+    }
+
+    // Start
     fetchItems();
 });
 
-// Funkcja globalna do pokazywania formularza
+// Funkcja globalna (poza DOMContentLoaded)
 function toggleForm() {
     const formContainer = document.querySelector('.add-form-container');
-    formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+    if (formContainer) {
+        formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+    }
 }

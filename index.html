@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketPlace - Twoje Lokalne Ogłoszenia</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">Market<span class="logo-accent">Place</span></a>
+            
+            <div class="nav-links">
+                <a href="#" class="nav-item"><i class="far fa-heart"></i> Ulubione</a>
+                <a href="#" class="nav-item"><i class="far fa-user"></i> Moje konto</a>
+                <a href="#" class="btn btn-primary" onclick="toggleForm()"><i class="fas fa-plus"></i> Dodaj ogłoszenie</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="add-form-container" style="display:none; background: white; padding: 20px; border-bottom: 1px solid #ccc;">
+        <div class="container">
+            <h3>Dodaj nowe ogłoszenie</h3>
+            <form id="add-item-form" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <input type="text" id="title" placeholder="Tytuł" required style="padding: 8px;">
+                <input type="text" id="price" placeholder="Cena (np. 100)" required style="padding: 8px;">
+                <input type="text" id="location" placeholder="Miasto" required style="padding: 8px;">
+                <input type="text" id="image_url" placeholder="Link do zdjęcia (opcjonalnie)" style="padding: 8px;">
+                <button type="submit" class="btn btn-primary">Dodaj</button>
+            </form>
+        </div>
+    </div>
+
+    <header class="hero">
+        <div class="container hero-content">
+            <h1>Znajdź to, czego szukasz</h1>
+            
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Czego szukasz? (np. Rower)">
+                <input type="text" placeholder="Lokalizacja">
+                <button id="search-btn" class="btn btn-search">Szukaj <i class="fas fa-search"></i></button>
+            </div>
+
+        </div>
+    </header>
+
+    <section class="categories">
+        <div class="container">
+            <h3>Kategorie</h3>
+            <div class="category-list">
+                <div class="cat-item"><i class="fas fa-car"></i> Motoryzacja</div>
+                <div class="cat-item"><i class="fas fa-home"></i> Nieruchomości</div>
+                <div class="cat-item"><i class="fas fa-laptop"></i> Elektronika</div>
+                <div class="cat-item"><i class="fas fa-tshirt"></i> Moda</div>
+                <div class="cat-item"><i class="fas fa-couch"></i> Dom i Ogród</div>
+                <div class="cat-item"><i class="fas fa-dog"></i> Zwierzęta</div>
+            </div>
+        </div>
+    </section>
+
+    <main class="listings">
+        <div class="container">
+            <h2>Najnowsze ogłoszenia</h2>
+            <div class="grid-container">
+                </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 MarketPlace. Wszystkie prawa zastrzeżone.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         itemsContainer.appendChild(div);
     }
 
-    // --- OBSŁUGA FORMULARZA DODAWANIA ---
+    //  OBSŁUGA FORMULARZA DODAWANIA
     if(addForm) {
         addForm.addEventListener('submit', (e) => {
             e.preventDefault(); // Zatrzymaj przeładowanie strony

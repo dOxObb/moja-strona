@@ -36,6 +36,13 @@ db.serialize(() => {
 
 // WAŻNE: Zamiast body-parser używamy wbudowanego express.json()
 app.use(express.json());
+// Odblokowanie CORS (pozwala Live Serverowi łączyć się z API)
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*"); // Pozwalamy każdemu (Live Server też)
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 // API: Pobierz ogłoszenia
 app.get('/api/items', (req, res) => {

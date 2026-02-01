@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Funkcja pobierająca ogłoszenia
     function fetchItems(query = '') {
-        let url = '/api/items';
+        let url = 'http://localhost:3000/api/items';
         if (query) url += `?q=${encodeURIComponent(query)}`;
 
         fetch(url)
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log("Wysyłam dane:", newItem);
 
-            fetch('/api/items', {
+            fetch('http://localhost:3000/api/items', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newItem)

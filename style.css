@@ -1,8 +1,8 @@
 /* Zmienne globalne */
 :root {
-    --primary-color: #002f34; /* Ciemny turkus (podobny do OLX) */
-    --accent-color: #23e5db;  /* Jasny akcent */
-    --bg-color: #f2f4f5;      /* Jasne szare tło */
+    --primary-color: #002f34; 
+    --accent-color: #23e5db;
+    --bg-color: #f2f4f5;
     --white: #ffffff;
     --text-dark: #002f34;
     --text-light: #7f9799;
@@ -11,22 +11,28 @@
     --transition: all 0.3s ease;
 }
 
-/* Reset CSS i ustawienia układu */
+/* Reset CSS */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* FIX: Ustawienie body jako flexbox, by stopka była na dole */
+/* WAŻNE: Ustawienie wysokości dla html i body */
+html {
+    height: 100%;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-dark);
     line-height: 1.6;
+    
+    /* Flexbox do układu strony */
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Zajmuje minimum 100% wysokości okna */
+    min-height: 100vh; /* Musi zajmować całe okno */
 }
 
 /* Kontener ułatwiający centrowanie */
@@ -34,6 +40,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    width: 100%; /* Zabezpieczenie szerokości */
 }
 
 /* NAWIGACJA */
@@ -101,7 +108,7 @@ body {
     color: var(--primary-color);
 }
 
-/* FORMULARZ DODAWANIA */
+/* Formularz dodawania */
 .add-form-container {
     background: white;
     padding: 20px 0;
@@ -186,11 +193,12 @@ body {
     background-color: var(--accent-color);
 }
 
-/* LISTA OGŁOSZEŃ (GRID) */
+/* LISTA OGŁOSZEŃ */
 .listings {
     padding: 40px 0;
-    /* FIX: Wypycha stopkę w dół, jeśli jest mało treści */
-    flex: 1; 
+    /* WAŻNE: Rozciągnij tę sekcję, aby wypełniła pustą przestrzeń */
+    flex: 1;
+    width: 100%;
 }
 
 .listings h2 {
@@ -267,8 +275,9 @@ body {
     text-align: center;
     padding: 20px 0;
     font-size: 14px;
-    /* Dzięki flex:1 w .listings, stopka zawsze trafi tutaj */
-    margin-top: auto; 
+    width: 100%;
+    /* WAŻNE: To wymusza przesunięcie stopki na sam dół */
+    margin-top: auto;
 }
 
 /* Responsywność */
@@ -276,11 +285,9 @@ body {
     .search-bar {
         flex-direction: column;
     }
-    
     .nav-links span {
         display: none;
     }
-    
     .hero h1 {
         font-size: 1.8rem;
     }

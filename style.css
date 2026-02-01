@@ -292,3 +292,31 @@ body {
         font-size: 1.8rem;
     }
 }
+
+/* --- ANIMACJE --- */
+
+/* Definicja ruchu: start nieco niżej i przezroczysty -> koniec na miejscu i widoczny */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dodajemy animację do karty ogłoszenia */
+.card {
+    /* ... twoje istniejące style .card zostają ... */
+    
+    /* Dodaj to: */
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0; /* Na start niewidoczne, żeby nie mignęło przed animacją */
+}
+
+/* Opcjonalne: Delikatny efekt po najechaniu na przycisk "Szukaj" */
+.btn-search:active {
+    transform: scale(0.98);
+}
